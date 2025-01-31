@@ -28,7 +28,7 @@ private  final PostDao postDao=new PostDaoImpl();
     }
 
     @Override
-    public Post searchPost(String query) {
+    public List<Post> searchPost(String query) {
         try {
           return   postDao.searchPost(query);
         } catch (Exception e) {

@@ -2,6 +2,7 @@ package java16.dao.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import java16.config.DBConfig;
 import java16.dao.PostDao;
 import java16.entity.Post;
@@ -50,12 +51,12 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public Post searchPost(String query) {
-        String hql = "from Post post where post.description like :query";
+    public List<Post> searchPost(String query) {
+        String hql = "select p* from Post p where p.description like "+query;
 
-        Query query1 = entityManager.createQuery(hql);
+        TypedQuery<Post> query1 = entityManager.createQuery(hql, Post.class);
         query1.setParameter("query", "%" + query + "%");
-        return  (Post) query1.getSingleResult();
+       return query1.getResultList();
     }
 
     @Override

@@ -101,8 +101,8 @@ public class App {
                     }
                 }
                 case 10 -> {
-                    Post post = postService.searchPost("zzz");
-                    System.out.println(post);
+                    List<Post> a = postService.searchPost("a");
+                    System.out.println(a);
                 }
                 case 11 -> {
                     String s = postService.deletePostById(3L);
