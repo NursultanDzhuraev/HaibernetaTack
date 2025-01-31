@@ -31,8 +31,8 @@ public class Profile {
         this.gender = gender;
         this.biography = biography;
     }
-
-//    @OneToOne
-//    private User user;
+    @ToString.Exclude
+    @OneToOne(cascade = CascadeType.ALL)
+    private User ownerUser;
 
 }

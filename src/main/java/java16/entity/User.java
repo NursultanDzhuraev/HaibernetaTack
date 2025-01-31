@@ -27,11 +27,13 @@ public class User {
         this.email = email;
         this.password = password;
     }
-
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
+    @ToString.Exclude
+    @OneToOne(mappedBy = "ownerUser", cascade = CascadeType.ALL)
     private Profile profile;
-     @OneToMany(mappedBy = "owner")
+@ToString.Exclude
+     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Post> post;
-     @ManyToMany(mappedBy = "user")
+    @ToString.Exclude
+     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Comment> comment;
 }

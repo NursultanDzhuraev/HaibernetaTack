@@ -31,8 +31,10 @@ public class Comment  {
         this.commentDate = LocalDate.now();
 
     }
-    @ManyToMany
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "comment")
     private List<User> user;
-//    @ManyToOne
-//    private Post post;
+    @ToString.Exclude
+    @ManyToOne
+    private Post post;
 }

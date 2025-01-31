@@ -5,8 +5,6 @@ import java16.entity.Comment;
 import java16.entity.Post;
 import java16.entity.Profile;
 import java16.entity.User;
-import org.hibernate.HibernateException;
-import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 
@@ -21,7 +19,7 @@ public class DBConfig {
         properties.put(Environment.JAKARTA_JDBC_USER, "postgres");
         properties.put(Environment.JAKARTA_JDBC_PASSWORD, "nurs123");
         properties.put(Environment.DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
-        properties.put(Environment.HBM2DDL_AUTO, "create");
+        properties.put(Environment.HBM2DDL_AUTO, "update");
         properties.put(Environment.SHOW_SQL, true);
 
         Configuration configuration = new Configuration();

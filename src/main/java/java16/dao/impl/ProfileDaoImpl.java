@@ -11,23 +11,46 @@ public class ProfileDaoImpl implements ProfileDao {
 
     @Override
     public void saveProfile(Long userId, Profile profile) {
-        entityManager.getTransaction().begin();
-        User user = entityManager.find(User.class, userId);
-        user.setProfile(profile);
-        entityManager.merge(user);
-        entityManager.getTransaction().commit();
+        try {
+            entityManager.getTransaction().begin();
+            User user = entityManager.find(User.class, userId);
+            profile.setOwnerUser(user);
+            entityManager.persist(profile);
+            if (user.getProfile() == null) {user.setProfile(profile);}
+            entityManager.merge(user);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
     public Profile findByUserId(Long userId) {
-        User user = entityManager.find(User.class, userId);
-        return user.getProfile();
+        try {
+            User user = entityManager.find(User.class, userId);
+            return user.getProfile();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public void deleteProfileByUserId(Long userId) {
-        entityManager.getTransaction().begin();
-        User user = entityManager.find(User.class, userId);
-        entityManager.remove(user.getProfile());
+
+        try {
+            entityManager.getTransaction().begin();
+            User user = entityManager.find(User.class, userId);
+            if (user != null && user.getProfile() != null) {
+                entityManager.remove(user.getProfile());
+                user.setProfile(null);
+                entityManager.merge(user);
+            }
+
+            entityManager.getTransaction().commit();
+        }catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            System.out.println(e.getMessage());
+        }
     }
 }

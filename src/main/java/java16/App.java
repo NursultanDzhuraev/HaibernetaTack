@@ -21,8 +21,8 @@ import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) {
-//
-//        DBConfig.getEntityManagerFactory();
+
+        DBConfig.getEntityManagerFactory();
         UserService userService = new UserServiceImpl();
         ProfileService profileService = new ProfileServiceImpl();
         PostService postService = new PostServiceImpl();
@@ -61,14 +61,14 @@ public class App {
                     System.out.println(userById);
                 }
                 case 3 -> {
-                    userService.updateUserProfile(1L, new Profile("Asan",
+                    userService.updateUserProfile(2L, new Profile("Asan",
                             LocalDate.of(2024, 10, 13), Gender.MALE, "aaa"));
-                    userService.updateUserProfile(2L, new Profile("Ysan",
-                            LocalDate.of(2024, 9, 12), Gender.MALE, "bbb"));
-                    userService.updateUserProfile(3L, new Profile("Batma",
-                            LocalDate.of(2024, 8, 11), Gender.FEMALE, "ccc"));
-                    userService.updateUserProfile(4L, new Profile("Zyyra",
-                            LocalDate.of(2024, 7, 10), Gender.FEMALE, "ddd"));
+//                    userService.updateUserProfile(2L, new Profile("Ysan",
+//                            LocalDate.of(2024, 9, 12), Gender.MALE, "bbb"));
+//                    userService.updateUserProfile(3L, new Profile("Batma",
+//                            LocalDate.of(2024, 8, 11), Gender.FEMALE, "ccc"));
+//                    userService.updateUserProfile(4L, new Profile("Zyyra",
+//                            LocalDate.of(2024, 7, 10), Gender.FEMALE, "ddd"));
                 }
                 case 4 -> {
                     String delete = userService.delete(4L);

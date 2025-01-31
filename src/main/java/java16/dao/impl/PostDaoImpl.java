@@ -16,15 +16,25 @@ public class PostDaoImpl implements PostDao {
     @Override
     public boolean savePost(Long userId, Post post) {
 
-        entityManager.getTransaction().begin();
-        User user = entityManager.find(User.class, userId);
-        entityManager.persist(post);
-        Post post1 = entityManager.find(Post.class, post.getId());
-        post1.setOwner(user);
-        if(user.getPost() == null){user.setPost(new ArrayList<>());}
-        user.getPost().add(post);
-        entityManager.getTransaction().commit();
-        return false;
+        try {
+            entityManager.getTransaction().begin();
+
+            User user = entityManager.find(User.class, userId);
+            post.setOwner(user);
+            entityManager.persist(post);
+
+            if (user.getPost() == null) {
+                user.setPost(new ArrayList<>());
+            }
+            user.getPost().add(post);
+            entityManager.merge(user);
+            entityManager.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
     public List<Post> findPostById(Long postId) {
      return   entityManager.createQuery
@@ -35,28 +45,32 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public List<Post> getPostByUserId(Long userId) {
-        List<Post> posts = new ArrayList<>();
-        posts.addAll(findPostById(userId));
-
-        return posts;
+      return entityManager.createQuery("select p from Post p where p.id = :userId", Post.class)
+               .setParameter("userId", userId).getResultList();
     }
 
     @Override
     public Post searchPost(String query) {
         String hql = "from Post post where post.description like :query";
-        entityManager.getTransaction().begin();
+
         Query query1 = entityManager.createQuery(hql);
         query1.setParameter("query", "%" + query + "%");
-        Post post = (Post) query1.getSingleResult();
-        entityManager.getTransaction().commit();
-        return post;
+        return  (Post) query1.getSingleResult();
     }
 
     @Override
     public void deletePostById(Long id) {
-        entityManager.getTransaction().begin();
-        Post post = entityManager.find(Post.class, id);
-        entityManager.remove(post);
-        entityManager.getTransaction().commit();
+       try {
+           entityManager.getTransaction().begin();
+
+           Post post = entityManager.find(Post.class, id);
+           if (post != null) {
+               entityManager.remove(post);
+           }
+           entityManager.getTransaction().commit();
+       }catch (Exception e) {
+           entityManager.getTransaction().rollback();
+           System.out.println(e.getMessage());
+       }
     }
 }

@@ -18,7 +18,9 @@ public class UserDaoImpl implements UserDao {
             entityManager.getTransaction().begin();
             entityManager.persist(user);
             entityManager.getTransaction().commit();
+
         } catch (Exception e) {
+            entityManager.getTransaction().rollback();
             System.out.println(e.getMessage());
         }
     }
@@ -26,29 +28,54 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User findUserById(Long id) {
         try {
-          return   entityManager.find(User.class, id);
+            return entityManager.find(User.class, id);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
+            return null;
         }
     }
 
     @Override
     public void updateUserProfile(Long userId, Profile profile) {
-        entityManager.getTransaction().begin();
-        User user = entityManager.find(User.class, userId);
-        user.setProfile(profile);
-        entityManager.merge(user);
-        entityManager.getTransaction().commit();
+        try {
+            entityManager.getTransaction().begin();
+
+            User user = entityManager.find(User.class, userId);
+            if (user != null) {
+                Profile profile1 = user.getProfile();
+                if (profile1 != null) {
+                    profile1.setBirthday(profile.getBirthday());
+                    profile1.setFirstName(profile.getFirstName());
+                    profile1.setBiography(profile.getBiography());
+                    profile1.setGender(profile.getGender());
+                }else {
+                    user.setProfile(profile);
+                }
+                entityManager.getTransaction().commit();
+            } else {
+                System.out.println("User not found");
+            }
+
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
     public void delete(Long id) {
-        entityManager.getTransaction().begin();
-        entityManager.remove(
-                entityManager.createQuery("select u from User u where u.id = :id", User.class)
-                        .setParameter("id", id)
-                        .getSingleResult()
-        );
-        entityManager.getTransaction().commit();
+       try {
+           entityManager.getTransaction().begin();
+           User user = entityManager.find(User.class, id);
+           if (user != null) {
+               entityManager.remove(user);
+               entityManager.getTransaction().commit();
+           } else {
+               System.out.println("User not found");
+           }
+       }catch(Exception e) {
+           entityManager.getTransaction().rollback();
+           System.out.println(e.getMessage());
+       }
     }
 }

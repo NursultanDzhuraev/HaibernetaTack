@@ -33,8 +33,10 @@ public class Post {
     private void onCreate() {
         this.createdAt = LocalDate.now();
     }
+    @ToString.Exclude
     @ManyToOne
     private User owner;
+    @ToString.Exclude
     @OneToMany(mappedBy = "post")
     private List<Comment> comments;
 }
