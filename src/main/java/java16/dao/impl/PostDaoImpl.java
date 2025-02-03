@@ -52,9 +52,9 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public List<Post> searchPost(String query) {
-        String hql = "select p* from Post p where p.description like "+query;
+//        String hql = "select p from Post p where p.description like "+query;
 
-        TypedQuery<Post> query1 = entityManager.createQuery(hql, Post.class);
+        TypedQuery<Post> query1 = entityManager.createQuery("select p from Post p where p.description ilike :query", Post.class);
         query1.setParameter("query", "%" + query + "%");
        return query1.getResultList();
     }

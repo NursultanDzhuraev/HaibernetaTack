@@ -69,7 +69,9 @@ public class UserDaoImpl implements UserDao {
            User user = entityManager.find(User.class, id);
            if (user != null) {
                entityManager.remove(user);
-               entityManager.getTransaction().commit();
+               entityManager.getTransaction().commit()
+
+
            } else {
                System.out.println("User not found");
            }
